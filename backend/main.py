@@ -1,16 +1,19 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 from auth.auth import verify_jwt
 from auth.routes import router as auth_router
+from db import models, crud, database  # <- import your DB modules
 import os
 from dotenv import load_dotenv
 
+# Load .env
 load_dotenv()
 
 app = FastAPI()
 
-# CORS for React frontend
-FRONTEND_URL = os.getenv("FRONTEND_URL")  # http://localhost:3000
+# ---------------- CORS for React frontend ----------------
+FRONTEND_URL = os.getenv("FRONTEND_URL")  # e.g., http://localhost:3000
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[FRONTEND_URL],
@@ -19,14 +22,53 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include auth routes
+# ---------------- Auth routes ----------------
 app.include_router(auth_router)
 
-# Protected API routes
+# ---------------- DB setup ----------------
+# Create tables if they don't exist
+models.Base.metadata.create_all(bind=database.engine)
+
+# Dependency for DB
+def get_db():
+    db = database.SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# ---------------- Protected API routes ----------------
 @app.get("/properties")
-def get_properties(user=Depends(verify_jwt)):
-    return {"message": f"Hello {user['sub']}, here are your properties!"}
+def get_properties(user=Depends(verify_jwt), db: Session = Depends(get_db)):
+    properties = crud.get_properties(db)  # query from DB
+    return {
+        "message": f"Hello {user['sub']}, here are your properties!",
+        "data": properties
+    }
+
+@app.get("/leases")
+def get_leases(user=Depends(verify_jwt), db: Session = Depends(get_db)):
+    leases = crud.get_leases(db)  # query from DB
+    return {
+        "message": f"Hello {user['sub']}, here are your leases!",
+        "data": leases
+    }
 
 @app.get("/dashboard")
-def get_dashboard(user=Depends(verify_jwt)):
-    return {"message": f"Dashboard data for {user['sub']}"}
+def get_dashboard(user=Depends(verify_jwt), db: Session = Depends(get_db)):
+    # Example: return counts or aggregated data
+    total_properties = db.query(models.Property).count()
+    total_leases = db.query(models.Lease).count()
+    return {
+        "message": f"Dashboard data for {user['sub']}",
+        "total_properties": total_properties,
+        "total_leases": total_leases
+    }
+# ---------- TEST ROUTE ----------
+@app.get("/test-db")
+def test_db_connection(db: Session = Depends(get_db)):
+    try:
+        leases_sample = crud.get_leases(db, skip=0, limit=5)
+        return {"status": "success", "data_sample": leases_sample}
+    except Exception as e:
+        return {"status": "error", "details": str(e)}
