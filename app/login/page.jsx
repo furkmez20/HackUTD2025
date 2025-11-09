@@ -20,7 +20,7 @@ export default function LoginPage() {
           <LockIcon className="w-10 h-10 text-green-700" />
         </div>
         <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-          Sign in to EstateWise AI
+          Sign in to EstateWise
         </h2>
         <p className="text-gray-500 mb-8 text-center">
           Enter your credentials to continue.

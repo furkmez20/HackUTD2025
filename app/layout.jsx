@@ -1,16 +1,17 @@
-//layout.jsx
 import "./globals.css";
 
 export const metadata = {
-  title: "EstateWise",
-  description: "Your Smartest Path to Real Estate Investment",
+  title: "CBRE Portfolio AI",
+  description: "AI-Powered Real Estate Insight Assistant",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="light">
-      <body className="bg-[#12352f] dark:bg-[#12352f] text-[#12352f] dark:text-gray-50 font-sans antialiased transition-colors duration-300">
-        {children}
+    <html lang="en">
+      <body className="flex h-screen bg-light text-dark">
+        <div className="flex flex-col flex-1">
+          <main className="p-6 overflow-y-auto">{children}</main>
+        </div>
       </body>
     </html>
   );

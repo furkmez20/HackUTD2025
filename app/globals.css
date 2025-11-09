@@ -1,11 +1,21 @@
-@import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+html, body {
+  background-color: #fffdf4; /* light */
+  color: #12352f; /* dark */
+  font-family: 'Inter', sans-serif;
+}
 
+.sidebar-collapsed {
+  width: 4rem;
+}
 
-body {
-  font-family: 'Montserrat', sans-serif;
+.sidebar-expanded {
+  width: 14rem;
+}
+
+.transition-all {
+  transition: all 0.3s ease;
 }
