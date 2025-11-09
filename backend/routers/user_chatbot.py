@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
-from db import database, models
-from nlp1.user_nlp import parse_user_query
-from ai.gemini_client import summarize_response
+from ..db import database, models
+from ..nlp1.user_nlp import parse_user_query
+from ..ai.gemini_client import summarize_response
 
 router = APIRouter(prefix="/chat/user", tags=["User Chatbot"])
 

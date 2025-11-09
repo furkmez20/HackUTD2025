@@ -8,7 +8,7 @@ function Dashboard() {
     const response = await fetch("http://localhost:8000/properties", {
       headers: {
         Authorization: `Bearer ${token}`,
-      },
+      },i
     });
     const data = await response.json();
     console.log(data);

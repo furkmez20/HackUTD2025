@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func, extract
 from datetime import date
-from db import models, database
+from ..db import models, database
 
 router = APIRouter(prefix="/dashboard", tags=["Manager Dashboard"])
 

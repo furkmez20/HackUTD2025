@@ -1,13 +1,14 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from auth.auth import verify_jwt
-from auth.routes import router as auth_router
-from db import models, crud, database  # <- import your DB modules
+from .auth.auth import verify_jwt
+from .auth.routes import router as auth_router
+from backend.db import models, crud, database  # <- import your DB modules
 import os
 from dotenv import load_dotenv
-from routers.user_chatbot import router as user_chatbot_router
-from routers.manager_dashboard import router as manager_dashboard_router
+from .routers.user_chatbot import router as user_chatbot_router
+from .routers.manager_chatbot import router as manager_chatbot_router
+from .routers.manager_dashboard import router as manager_dashboard_router
 # Load .env
 load_dotenv()
 
@@ -26,6 +27,7 @@ app.add_middleware(
 # ---------------- Auth routes ----------------
 app.include_router(auth_router)
 app.include_router(user_chatbot_router)
+app.include_router(manager_chatbot_router)
 app.include_router(manager_dashboard_router)
 # ---------------- DB setup ----------------
 # Create tables if they don't exist
@@ -38,6 +40,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 # ---------------- Protected API routes ----------------
 @app.get("/properties")
@@ -74,3 +77,7 @@ def test_db_connection(db: Session = Depends(get_db)):
         return {"status": "success", "data_sample": leases_sample}
     except Exception as e:
         return {"status": "error", "details": str(e)}
+
+@app.get("/test-manager")
+def test_manager():
+    return {"status": "Manager chatbot connected!"}

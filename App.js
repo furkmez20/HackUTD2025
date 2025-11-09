@@ -1,5 +1,5 @@
 import React from "react";
-import Dashboard from "./Dashboard";
+import Dashboard from "./app/components/Dashboard";
 import { useAuth0 } from "@auth0/auth0-react";
 
 function App() {

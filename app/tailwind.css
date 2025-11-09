@@ -1,0 +1,13 @@
+/* Tailwind v4: base reset + utilities */
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+
+/* Custom utilities */
+@layer utilities {
+  .bg-gradient-text {
+    @apply bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent;
+  }
+  .dark .bg-gradient-text {
+    @apply bg-gradient-to-r from-gray-100 to-blue-400;
+  }
+}
