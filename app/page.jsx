@@ -1,9 +1,16 @@
 // page.jsx
 "use client";
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'; // <--- NEW: Import useRouter
 
 // Main application component
 function EstateWiseApp() {
+  const router = useRouter(); // <--- NEW: Initialize router
+
+  const handleLoginClick = () => { // <--- NEW: Define handler
+    router.push('/login'); 
+  };
+    
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
       {/* Header */}
@@ -15,7 +22,10 @@ function EstateWiseApp() {
           <button className="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-4 rounded-lg mr-3 shadow-md transition duration-150">
             For Professionals
           </button>
-          <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-150">
+          <button 
+            onClick={handleLoginClick} // <--- UPDATED: Attach handler
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-150"
+          >
             Login
           </button>
         </div>
@@ -31,7 +41,7 @@ function EstateWiseApp() {
           <p className="text-lg text-gray-600 mb-10">
             Answer a few questions to get a personalized financial readiness score and unlock data-driven insights.
           </p>
-          
+            
           <ul className="space-y-6">
             <FeatureItem 
               icon="📈" 
@@ -144,7 +154,7 @@ const GoalsCard = () => {
           Next
         </button>
       </div>
-      
+        
       {/* Footer Note */}
       <p className="text-xs text-gray-400 mt-6 text-center">
         Your information is secure and will only be used to personalize your experience.
