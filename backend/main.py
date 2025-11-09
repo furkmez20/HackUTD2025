@@ -7,7 +7,7 @@ from db import models, crud, database  # <- import your DB modules
 import os
 from dotenv import load_dotenv
 from routers.user_chatbot import router as user_chatbot_router
-
+from routers.manager_dashboard import router as manager_dashboard_router
 # Load .env
 load_dotenv()
 
@@ -26,7 +26,7 @@ app.add_middleware(
 # ---------------- Auth routes ----------------
 app.include_router(auth_router)
 app.include_router(user_chatbot_router)
-
+app.include_router(manager_dashboard_router)
 # ---------------- DB setup ----------------
 # Create tables if they don't exist
 models.Base.metadata.create_all(bind=database.engine)
