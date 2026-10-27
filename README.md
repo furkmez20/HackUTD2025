@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# EstateWise AI - HackUTD2025
 
-## Getting Started
+EstateWise AI is a real-estate portfolio insights prototype. The repository contains a Next.js interface for property and portfolio workflows and a FastAPI service for property, lease, and operational data, authentication routes, and natural-language analysis.
 
-First, run the development server:
+The interface also uses sample portfolio data. There is no public demo URL configured in this repository.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## What it does
+
+- Presents real-estate investment and portfolio views for property and lease information.
+- Defines API routes for properties, leases, dashboard totals, user and manager chat, and manager dashboards.
+- Uses SQLAlchemy models backed by PostgreSQL for property, lease, and monthly operations records.
+- Includes Auth0 JWT verification for protected API routes.
+- Uses spaCy parsing and a Google Gemini client to summarize matching database results and suggest follow-up actions.
+
+## Stack
+
+- **Frontend:** Next.js 16, React 19, Tailwind CSS 4, Recharts
+- **API:** Python, FastAPI, SQLAlchemy
+- **Data:** PostgreSQL
+- **AI and language processing:** Google Gen AI SDK, spaCy (`en_core_web_sm`)
+- **Authentication:** Auth0 JWT validation
+
+## Architecture
+
+```mermaid
+flowchart LR
+  Web[Next.js frontend] --> API[FastAPI routes]
+  API --> Auth[Auth0 JWT verification]
+  API --> DB[(PostgreSQL via SQLAlchemy)]
+  API --> NLP[spaCy query parsing]
+  NLP --> Gemini[Gemini summaries]
+  DB --> Gemini
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The frontend and backend are separate development services. The API reads property and lease data from PostgreSQL; selected query results are passed to the language layer for summaries.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Run locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Frontend
 
-## Learn More
+Requires Node.js and npm. From the repository root:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The Next.js development server normally opens at `http://localhost:3000`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Backend
 
-## Deploy on Vercel
+Requires Python, PostgreSQL, and the environment values listed below. No Python dependency lock or requirements file is included, so install the API dependencies in a virtual environment:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install fastapi uvicorn sqlalchemy psycopg2-binary python-dotenv "python-jose[cryptography]" google-genai spacy
+python -m spacy download en_core_web_sm
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+On Windows PowerShell, activate the environment with `.venv\Scripts\Activate.ps1`.
+
+Create a local `.env` in the repository root and configure these variable names without committing secrets:
+
+```dotenv
+FRONTEND_URL=http://localhost:3000
+POSTGRES_USER=your_user
+POSTGRES_PASSWORD=your_password
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=your_database
+GEMINI_API_KEY=your_key
+AUTH0_DOMAIN=your_tenant_domain
+CLIENT_ID=your_client_id
+API_AUDIENCE=your_api_audience
+ALGORITHMS=RS256
+```
+
+Start the API from the repository root:
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+The API defaults to port `8000`. Set up the matching Auth0 application and PostgreSQL database before using authenticated or data-backed routes.
+
+## Demo
+
+No public demo URL is listed.
+
+## Repository
+
+[furkmez20/HackUTD2025](https://github.com/furkmez20/HackUTD2025)
